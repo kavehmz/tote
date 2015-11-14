@@ -43,5 +43,5 @@ func Products() []redmart.Product {
 }
 
 func main() {
-	fmt.Println(redmart.HighestValue(redmart.Tote{45, 30, 35}, Products()))
+	fmt.Println(redmart.IDSum(redmart.Tote{45, 30, 35}, Products()))
 }

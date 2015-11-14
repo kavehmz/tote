@@ -55,45 +55,27 @@ func removeUnfittables(tote Tote, ps []Product) []Product {
 	return ps
 }
 
-func findMax(n int, maxVolume int, ps []Product) int {
-	var val int
-	if n == 0 || maxVolume <= 0 {
-		return 0
-	}
-	if ps[n-1].volume() > maxVolume {
-		val = findMax(n-1, maxVolume, ps)
-	} else {
-		a := findMax(n-1, maxVolume, ps)
-		b := findMax(n-1, maxVolume-ps[n-1].volume(), ps) + ps[n-1].Price
-		if a > b {
-			val = a
-		} else {
-			val = b
-		}
-	}
-	return val
-}
+var selection []Product
 
-func printElements(s [][]bool, ps []Product, v int, n int) {
+func findSelection(s [][]bool, ps []Product, v int, n int) {
 	if v == 0 || n == 0 {
 		return
 	}
 	if s[n][v] {
-		fmt.Println(ps[n-1])
-		printElements(s, ps, v-ps[n-1].volume(), n-1)
+		selection = selection[:len(selection)+1]
+		selection[len(selection)-1] = ps[n-1]
+		findSelection(s, ps, v-ps[n-1].volume(), n-1)
 	} else {
-		printElements(s, ps, v, n-1)
+		findSelection(s, ps, v, n-1)
 	}
 }
 
-// HighestValue will calculate highest value of products that is choosable from Redmart products
-func HighestValue(tote Tote, ps []Product) string {
+// IDSum will calculate highest value of products that is choosable from Redmart products and return the sum
+func IDSum(tote Tote, ps []Product) int {
 	ps = removeUnfittables(tote, ps)
 	sort.Sort(products(ps))
 
-	fmt.Println(len(ps))
 	n := len(ps)
-
 	w := make([]int, n+1)
 	v := make([]int, n+1)
 	for k, val := range ps {
@@ -126,9 +108,13 @@ func HighestValue(tote Tote, ps []Product) string {
 		}
 	}
 
-	fmt.Println(m[n][tote.volume()])
+	fmt.Println("Optimized value: ", m[n][tote.volume()])
 
-	printElements(s, ps, tote.volume(), n)
-
-	return "t"
+	selection = make([]Product, 0, n)
+	findSelection(s, ps, tote.volume(), n)
+	var sum int
+	for _, v := range selection {
+		sum += v.ID
+	}
+	return sum
 }
