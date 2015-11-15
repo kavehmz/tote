@@ -2,4 +2,4 @@ language: go
 go:
   - 1.5
 script:
-    - go test redmart -v
+    - GOPATH=$PWD go test redmart -v
