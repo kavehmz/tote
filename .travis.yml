@@ -1,6 +1,5 @@
 language: go
 go:
   - 1.5
-go_import_path: github.com/kavehmz/tote/src
 script:
     - GOPATH=$PWD go test redmart -v
