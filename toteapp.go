@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/csv"
-	"fmt"
 	"os"
 	"redmart"
 	"strconv"
@@ -43,5 +42,5 @@ func Products() []redmart.Product {
 }
 
 func main() {
-	fmt.Println(redmart.IDSum(redmart.Tote{45, 30, 35}, Products()))
+	redmart.PackTote(redmart.Tote{45, 30, 35}, Products())
 }

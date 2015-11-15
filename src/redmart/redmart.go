@@ -1,7 +1,13 @@
+// Package prime provides functionality to pack a tote with most value optimized
+// products.
+// This is basically a classic knapsack algorithm with addition of preferring
+// lighter tote if there is no value loss.
+//
+// Value here is price of products to pick
 package redmart
 
 import (
-	"log"
+	"fmt"
 	"sort"
 )
 
@@ -67,9 +73,10 @@ func findSelection(s [][]bool, ps []Product, v int, n int) {
 	}
 }
 
-// IDSum will calculate highest value of products that is choosable from Redmart products and return the sum
-func IDSum(tote Tote, ps []Product) int {
+// PackTote will find the best combination of products to pick
+func PackTote(tote Tote, ps []Product) {
 	ps = removeUnfittables(tote, ps)
+	//This sort will force the algorithm to prefer lighter products in similar volume and price situation
 	sort.Sort(productsByWeight(ps))
 
 	n := len(ps)
@@ -105,7 +112,7 @@ func IDSum(tote Tote, ps []Product) int {
 		}
 	}
 
-	log.Println("Optimized value: ", valMap[n][tote.volume()])
+	fmt.Println("Optimized value: ", valMap[n][tote.volume()])
 
 	selection = make([]Product, 0, n)
 	findSelection(selMap, ps, tote.volume(), n)
@@ -113,5 +120,6 @@ func IDSum(tote Tote, ps []Product) int {
 	for _, v := range selection {
 		sum += v.ID
 	}
-	return sum
+
+	fmt.Println("Sum of product IDs: ", sum)
 }
