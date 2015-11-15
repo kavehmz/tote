@@ -73,12 +73,7 @@ func findSelection(s [][]bool, ps []Product, v int, n int) {
 	}
 }
 
-// PackTote will find the best combination of products to pick
-func PackTote(tote Tote, ps []Product) {
-	ps = removeUnfittables(tote, ps)
-	//This sort will force the algorithm to prefer lighter products in similar volume and price situation
-	sort.Sort(productsByWeight(ps))
-
+func decisionMaps(tote Tote, ps []Product) ([][]int, [][]bool) {
 	n := len(ps)
 	volumes := make([]int, n+1)
 	prices := make([]int, n+1)
@@ -111,15 +106,23 @@ func PackTote(tote Tote, ps []Product) {
 
 		}
 	}
+	return valMap, selMap
+}
 
-	fmt.Println("Optimized value: ", valMap[n][tote.volume()])
+// PackTote will find the best combination of products to pick
+func PackTote(tote Tote, ps []Product) {
+	ps = removeUnfittables(tote, ps)
+	sort.Sort(productsByWeight(ps))
 
+	n := len(ps)
 	selection = make([]Product, 0, n)
+	valMap, selMap := decisionMaps(tote, ps)
 	findSelection(selMap, ps, tote.volume(), n)
+
 	var sum int
 	for _, v := range selection {
 		sum += v.ID
 	}
-
+	fmt.Println("Optimized value: ", valMap[n][tote.volume()])
 	fmt.Println("Sum of product IDs: ", sum)
 }
