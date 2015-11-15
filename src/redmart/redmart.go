@@ -73,42 +73,42 @@ func IDSum(tote Tote, ps []Product) int {
 	sort.Sort(productsByWeight(ps))
 
 	n := len(ps)
-	w := make([]int, n+1)
-	v := make([]int, n+1)
+	volumes := make([]int, n+1)
+	prices := make([]int, n+1)
 	for k, val := range ps {
-		w[k+1] = val.volume()
-		v[k+1] = val.Price
+		volumes[k+1] = val.volume()
+		prices[k+1] = val.Price
 	}
 
-	m := make([][]int, n+1)
-	s := make([][]bool, n+1)
-	for k := range m {
-		m[k] = make([]int, tote.volume()+1)
-		s[k] = make([]bool, tote.volume()+1)
+	valMap := make([][]int, n+1)
+	selMap := make([][]bool, n+1)
+	for k := range valMap {
+		valMap[k] = make([]int, tote.volume()+1)
+		selMap[k] = make([]bool, tote.volume()+1)
 	}
 
 	for i := 1; i <= n; i++ {
 		for j := 0; j <= tote.volume(); j++ {
-			if w[i] <= j {
-				if m[i-1][j] >= m[i-1][j-w[i]]+v[i] {
-					m[i][j] = m[i-1][j]
-					s[i][j] = false
+			if volumes[i] <= j {
+				if valMap[i-1][j] >= valMap[i-1][j-volumes[i]]+prices[i] {
+					valMap[i][j] = valMap[i-1][j]
+					selMap[i][j] = false
 				} else {
-					m[i][j] = m[i-1][j-w[i]] + v[i]
-					s[i][j] = true
+					valMap[i][j] = valMap[i-1][j-volumes[i]] + prices[i]
+					selMap[i][j] = true
 				}
 			} else {
-				m[i][j] = m[i-1][j]
-				s[i][j] = false
+				valMap[i][j] = valMap[i-1][j]
+				selMap[i][j] = false
 			}
 
 		}
 	}
 
-	log.Println("Optimized value: ", m[n][tote.volume()])
+	log.Println("Optimized value: ", valMap[n][tote.volume()])
 
 	selection = make([]Product, 0, n)
-	findSelection(s, ps, tote.volume(), n)
+	findSelection(selMap, ps, tote.volume(), n)
 	var sum int
 	for _, v := range selection {
 		sum += v.ID
