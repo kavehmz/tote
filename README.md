@@ -5,7 +5,7 @@
 This is a solution for a classic knapsack problem in form of 1/0 but with preferring lighter packages.
 
 # Note
-I will move this to a separate library to give it an standard Go form. 
+I will move this to a separate library to give it a standard Go format. 
 
 At the moment some Go facilities like Godoc are not able to use this repo.
 
