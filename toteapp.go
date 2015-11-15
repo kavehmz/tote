@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/csv"
 	"os"
-	"redmart"
 	"strconv"
+
+	"./src/redmart"
 )
 
 func check(e error) {
