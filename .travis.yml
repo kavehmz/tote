@@ -2,4 +2,4 @@ language: go
 go:
   - 1.5
 script:
-    - go test -v -bench .
+    - go test -v redmart
