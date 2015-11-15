@@ -1,11 +1,11 @@
 package redmart
 
 import (
-	"fmt"
+	"log"
 	"sort"
 )
 
-// Product defines Redmart products
+// Product defines a Redmart products
 type Product struct {
 	ID     int
 	Price  int
@@ -15,23 +15,20 @@ type Product struct {
 	Weight int
 }
 
-func (p Product) cubicValue() float64 {
-	return float64(p.Price) / float64(p.volume())
-}
 func (p Product) volume() int {
 	return p.Length * p.Width * p.Height
 }
 
 // For sorting based on cubic value
-type products []Product
+type productsByWeight []Product
 
-func (ps products) Len() int {
+func (ps productsByWeight) Len() int {
 	return len(ps)
 }
-func (ps products) Swap(i, j int) {
+func (ps productsByWeight) Swap(i, j int) {
 	ps[i], ps[j] = ps[j], ps[i]
 }
-func (ps products) Less(i, j int) bool {
+func (ps productsByWeight) Less(i, j int) bool {
 	return ps[i].Weight < ps[j].Weight
 }
 
@@ -73,7 +70,7 @@ func findSelection(s [][]bool, ps []Product, v int, n int) {
 // IDSum will calculate highest value of products that is choosable from Redmart products and return the sum
 func IDSum(tote Tote, ps []Product) int {
 	ps = removeUnfittables(tote, ps)
-	sort.Sort(products(ps))
+	sort.Sort(productsByWeight(ps))
 
 	n := len(ps)
 	w := make([]int, n+1)
@@ -108,7 +105,7 @@ func IDSum(tote Tote, ps []Product) int {
 		}
 	}
 
-	fmt.Println("Optimized value: ", m[n][tote.volume()])
+	log.Println("Optimized value: ", m[n][tote.volume()])
 
 	selection = make([]Product, 0, n)
 	findSelection(s, ps, tote.volume(), n)
