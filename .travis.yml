@@ -1,5 +1,7 @@
 language: go
 go:
   - 1.5
+before_install:
+	- rm kavehmz/tote/toteapp.go
 script:
     - GOPATH=$PWD go test redmart -v
